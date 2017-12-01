@@ -2,17 +2,12 @@ plugins {
     id 'war'
     id 'maven'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.7.1'
+    id 'com.jfrog.bintray' version '1.7.3'
 }
 
 repositories {
     jcenter()
     mavenLocal()
-    
-    // repo for jsky    
-    maven {
-        url = 'http://java.freehep.org/maven2'
-    }
 }
 
 apply from: '../caom2sandbox.gradle'
@@ -21,7 +16,7 @@ sourceCompatibility = 1.7
 
 group = 'ca.nrc.cadc'
 
-version = '1000'
+version = '1001'
 
 war {
     archiveName = project.name + '##' + project.version + '.war'

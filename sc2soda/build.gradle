@@ -15,7 +15,7 @@ sourceCompatibility = 1.7
 
 group = 'ca.nrc.cadc'
 
-version = '1002'
+version = '1003'
 
 war {
     archiveName = project.name + '##' + project.version + '.war'
@@ -27,8 +27,8 @@ dependencies {
     
     compile 'org.opencadc:cadc-util:[1.0,)'
     compile 'org.opencadc:cadc-log:[1.0,)'
-    compile 'org.opencadc:caom2-tap:[1.6.12,)'
-    compile 'org.opencadc:caom2-soda-server:[1.1,)'
+    compile 'org.opencadc:caom2-tap:[1.7.3,)'
+    compile 'org.opencadc:caom2-soda-server:[1.6.3,)'
     compile 'org.opencadc:cadc-access-control-identity:[1.0,)'
     compile 'org.opencadc:cadc-vosi:[1.0.1,2.0)'
     compile 'org.opencadc:cadc-wcs:[2.0,3.0)'

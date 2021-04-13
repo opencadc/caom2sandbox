@@ -115,7 +115,7 @@ public class LinksTest
     protected static final String QUERY_URI1 = "caom:IRIS/f212h000/IRAS-25um";
     protected static final String QUERY_URI2 = "caom:IRIS/f097h000/IRAS-60um";
     
-    protected static final String QUERY_PUB1 = "ivo://cadc.nrc.ca/IRIS?f212h000/IRAS-25um";
+    protected static final String QUERY_PUB1 = "ivo://cadc.nrc.ca/test/IRIS?f212h000/IRAS-25um";
     
     protected static final String INVALID_URI = "foo:bar";
     protected static final String NOTFOUND_URI = "caom:FOO/notSuchObservation/noSuchPlane";
@@ -125,8 +125,8 @@ public class LinksTest
 
     static
     {
+        Log4jInit.setLevel("ca.nrc.cadc.sc2links", Level.INFO);
         Log4jInit.setLevel("ca.nrc.cadc.caom2.datalink", Level.INFO);
-        Log4jInit.setLevel("ca.nrc.cadc.reg", Level.INFO);
     }
 
     public LinksTest() { }
@@ -156,7 +156,7 @@ public class LinksTest
     @Test
     public void testSingleUriManifestFormat() throws Exception
     {
-        log.debug("testSingleUriManifestFormat");
+        log.info("testSingleUriManifestFormat");
         try
         {
             // POST the parameters.
@@ -171,7 +171,7 @@ public class LinksTest
             Assert.assertEquals("number of tokens", 2, parts.length);
             Assert.assertEquals("OK", parts[0]);
             URL url = new URL(parts[1]);
-            log.debug("result url: " + url);
+            log.info("result url: " + url);
         }
         catch(Exception unexpected)
         {
@@ -183,28 +183,28 @@ public class LinksTest
     @Test
     public void testSinglePlaneURI_Anon() throws Exception
     {
-        log.debug("testSinglePlaneURI_Anon");
+        log.info("testSinglePlaneURI_Anon");
         doSingleURI(anonURL, QUERY_URI1, "https");
     }
 
     @Test
     public void testSinglePlaneURI_Auth() throws Exception
     {
-        log.debug("testSinglePlaneURI_Auth");
+        log.info("testSinglePlaneURI_Auth");
         doSingleURI(certURL, QUERY_URI1, "https");
     }
     
     @Test
     public void testSinglePublisherID_Anon() throws Exception
     {
-        log.debug("testSinglePublisherID_Anon");
+        log.info("testSinglePublisherID_Anon");
         doSingleURI(anonURL, QUERY_PUB1, "https");
     }
 
     @Test
     public void testSinglePublisherID_Auth() throws Exception
     {
-        log.debug("testSinglePublisherID_Auth");
+        log.info("testSinglePublisherID_Auth");
         doSingleURI(certURL, QUERY_PUB1, "https");
     }
 
@@ -215,15 +215,6 @@ public class LinksTest
             // GET the query.
             VOTableDocument getVotable = TestUtil.get(resourceURL, new String[] { "id="+uri });
             VOTableResource gvr = getVotable.getResourceByType("results");
-            
-            VOTableInfo queryStatus = null;
-            for (VOTableInfo info : gvr.getInfos())
-            {
-                if (info.getName().equals("QUERY_STATUS"))
-                    queryStatus = info;
-            }
-            Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("OK", queryStatus.getValue());
             
             VOTableTable gvtab = gvr.getTable();
 
@@ -263,7 +254,7 @@ public class LinksTest
             int sdfCol = TestUtil.getFieldIndexes(getFields)[2];
             TestUtil.compareTableData(getTableData, postTableData, urlCol, sdfCol);
 
-            TestUtil.checkContent(gvtab, expectedProtocol);
+            TestUtil.checkContent(gvtab, expectedProtocol, false);
 
             log.debug("testSingleUri passed");
         }
@@ -277,21 +268,12 @@ public class LinksTest
     @Test
     public void testMultipleUri() throws Exception
     {
-        log.debug("testMultipleUri");
+        log.info("testMultipleUri");
         try
         {
             // GET the query.
             VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "id="+QUERY_URI1, "id="+QUERY_URI2 });
             VOTableResource gvr = getVotable.getResourceByType("results");
-            
-            VOTableInfo queryStatus = null;
-            for (VOTableInfo info : gvr.getInfos())
-            {
-                if (info.getName().equals("QUERY_STATUS"))
-                    queryStatus = info;
-            }
-            Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("OK", queryStatus.getValue());
             
             VOTableTable gvtab = gvr.getTable();
 
@@ -342,21 +324,13 @@ public class LinksTest
     @Test
     public void testUsageFault_noID() throws Exception
     {
-        log.debug("testUsageFault_noID");
+        log.info("testUsageFault_noID");
         try
         {
             // GET the query.
             VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
-            VOTableInfo queryStatus = null;
-            for (VOTableInfo info : gvr.getInfos())
-            {
-                if (info.getName().equals("QUERY_STATUS"))
-                    queryStatus = info;
-            }
-            Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("OK", queryStatus.getValue());
-            
+
             // no rows
             Assert.assertFalse("no rows", gvr.getTable().getTableData().iterator().hasNext());
         }
@@ -370,21 +344,12 @@ public class LinksTest
     @Test
     public void testUsageFault_badID() throws Exception
     {
-        log.debug("testUsageFault_badID");
+        log.info("testUsageFault_badID");
         try
         {
             // GET the query.
             VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "ID="+INVALID_URI }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
-            VOTableInfo queryStatus = null;
-            for (VOTableInfo info : gvr.getInfos())
-            {
-                if (info.getName().equals("QUERY_STATUS"))
-                    queryStatus = info;
-            }
-            Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("OK", queryStatus.getValue());
-            
             
             VOTableTable gvtab = gvr.getTable();
 
@@ -420,21 +385,12 @@ public class LinksTest
     @Test
     public void testNotFoundFault() throws Exception
     {
-        log.debug("testNotFoundFault");
+        log.info("testNotFoundFault");
         try
         {
             // GET the query.
             VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "ID="+NOTFOUND_URI }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
-            VOTableInfo queryStatus = null;
-            for (VOTableInfo info : gvr.getInfos())
-            {
-                if (info.getName().equals("QUERY_STATUS"))
-                    queryStatus = info;
-            }
-            Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("OK", queryStatus.getValue());
-            
             
             VOTableTable gvtab = gvr.getTable();
 

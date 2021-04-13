@@ -181,7 +181,7 @@ public class TestUtil
         return indexes;
     }
 
-    public static void checkContent(VOTableTable tab, String expectedProto) throws Exception
+    public static void checkContent(VOTableTable tab, String expectedProto, boolean expectError) throws Exception
     {
         Integer[] indices = TestUtil.getFieldIndexes(tab.getFields());
         int uriCol = indices[0];
@@ -201,27 +201,26 @@ public class TestUtil
             Object semO = row.get(semCol);
             Assert.assertNotNull("ID value", uriO);
             Assert.assertNotNull("semantics value", semO);
-            if (urlO != null)
-            {
+            
+            URI uri = new URI((String) uriO);
+            
+            if (expectError) {
+                Assert.assertNotNull(errO);
+                Assert.assertNull(urlO);
+                Assert.assertNull(srvO);
+            } else if (urlO != null) {
                 Assert.assertNull(srvO);
                 Assert.assertNull(errO);
+                URL url = new URL((String) urlO);
+                Assert.assertEquals("proto", expectedProto, url.getProtocol());
                 // TODO: would be nice to check the value
                 //Assert.assertEquals(DataLink.Term.THIS.getValue(), semO);
-            }
-            else if (srvO != null)
-            {
+            } else if (srvO != null) {
                 Assert.assertNull(urlO);
                 Assert.assertNull(errO);
                 Assert.assertEquals(DataLink.Term.CUTOUT.getValue(), semO);
-            }
-            else
-                Assert.assertNotNull(errO);
-            
-            URI uri = new URI((String) uriO);
-            if (urlO != null)
-            {
-                URL url = new URL((String) urlO);
-                Assert.assertEquals("proto", expectedProto, url.getProtocol());
+            } else {
+                Assert.fail("expectError=" + expectError + " found: " + urlO + " " + srvO + " " + errO);
             }
         }
     }

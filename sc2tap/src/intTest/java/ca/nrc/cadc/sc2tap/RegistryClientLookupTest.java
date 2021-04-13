@@ -120,7 +120,7 @@ public class RegistryClientLookupTest {
 
     Map<String, Object> queryParams = new TreeMap<>();
 
-    public RegistryClientLookupTest() {
+    public RegistryClientLookupTest() throws Exception {
         File cf = FileUtil.getFileFromResource("x509_CADCRegtest1.pem", RegistryClientLookupTest.class);
         subject = SSLUtil.createSubject(cf);
         regClient = new RegistryClient();

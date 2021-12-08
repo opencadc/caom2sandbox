@@ -2,7 +2,7 @@ plugins {
     id 'war'
     id 'maven'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.7.1'
+    id 'checkstyle'
 }
 
 repositories {
@@ -10,17 +10,13 @@ repositories {
     mavenLocal()
 }
 
-apply from: '../caom2sandbox.gradle'
+apply from: '../opencadc.gradle'
 
 sourceCompatibility = 1.8
 
 group = 'ca.nrc.cadc'
 
-version = '1001'
-
-war {
-    archiveName = project.name + '##' + project.version + '.war'
-    
+war {  
     // include the swagger-ui
     from(System.getenv('RPS') + '/resources/') {
         include 'swagger-ui/'

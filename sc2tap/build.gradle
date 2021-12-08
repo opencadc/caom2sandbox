@@ -2,25 +2,25 @@ plugins {
     id 'war'
     id 'maven'
     id 'maven-publish'
+    id 'checkstyle'
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
-    // tmp to resolve uk.ac.starlink
-    jcenter()
 }
 
-apply from: '../caom2sandbox.gradle'
+apply from: '../opencadc.gradle'
 
 sourceCompatibility = 1.8
 
 group = 'ca.nrc.cadc'
 
-version = '1005'
-
-war {
-    archiveName = project.name + '##' + project.version + '.war'
+war {  
+    // include the swagger-ui
+    from(System.getenv('RPS') + '/resources/') {
+        include 'swagger-ui/'
+    }
 }
 
 dependencies {

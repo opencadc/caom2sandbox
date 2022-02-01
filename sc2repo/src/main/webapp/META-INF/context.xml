@@ -3,7 +3,7 @@
     <JarScanner scanClassPath="false" />
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-    <ResourceLink name="jdbc/sandbox-repo"
+    <Resource name="jdbc/sandbox-repo"
         auth="Container"
         type="javax.sql.DataSource"
         factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"
@@ -15,7 +15,7 @@
         removeAbandoned="false"
         testOnBorrow="true" validationQuery="select 123" />       
 
-    <ResourceLink name="jdbc/sandboxtest-repo"
+    <Resource name="jdbc/sandboxtest-repo"
         auth="Container"
         type="javax.sql.DataSource"
         factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"

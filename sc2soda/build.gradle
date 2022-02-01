@@ -16,8 +16,6 @@ sourceCompatibility = 1.8
 
 group = 'ca.nrc.cadc'
 
-version = '1004'
-
 war {  
     // include the swagger-ui
     from(System.getenv('RPS') + '/resources/') {

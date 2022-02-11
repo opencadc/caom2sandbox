@@ -4,7 +4,6 @@
     <display-name>sc2repo</display-name>
 
     <servlet>
-        <load-on-startup>1</load-on-startup>
         <servlet-name>logControl</servlet-name>
         <servlet-class>ca.nrc.cadc.log.LogControlServlet</servlet-class>
         <init-param>
@@ -30,6 +29,7 @@
             <param-name>groupAuthorizer</param-name>
             <param-value>ca.nrc.cadc.ac.client.GroupAuthorizer</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -53,47 +53,25 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
-    <servlet>
-        <servlet-name>Repo23Servlet</servlet-name>
-        <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
-        <init-param>
-            <param-name>get</param-name>
-            <param-value>ca.nrc.cadc.caom2.repo.action.GetAction23</param-value>
-        </init-param>
-        <init-param>
-            <param-name>post</param-name>
-            <param-value>ca.nrc.cadc.caom2.repo.action.PostAction</param-value>
-        </init-param>
-        <init-param>
-            <param-name>put</param-name>
-            <param-value>ca.nrc.cadc.caom2.repo.action.PutAction</param-value>
-        </init-param>
-        <init-param>
-            <param-name>delete</param-name>
-            <param-value>ca.nrc.cadc.caom2.repo.action.DeleteAction</param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
     
     <servlet>
         <servlet-name>DeletionsServlet</servlet-name>
         <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
         <init-param>
             <param-name>get</param-name>
             <param-value>ca.nrc.cadc.caom2.repo.action.GetDeletedAction</param-value>
         </init-param>
+        <load-on-startup>2</load-on-startup>
     </servlet>
     
     <servlet>
-        <load-on-startup>3</load-on-startup>
         <servlet-name>AvailabilityServlet</servlet-name>
         <servlet-class>ca.nrc.cadc.vosi.AvailabilityServlet</servlet-class>
         <init-param>
             <param-name>ca.nrc.cadc.vosi.AvailabilityPlugin</param-name>
             <param-value>ca.nrc.cadc.sc2repo.ServiceAvailabilityImpl</param-value>
         </init-param>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet>
@@ -108,86 +86,33 @@
 
     <!-- URL-to-servlet mapping -->
     
-    
+    <!-- Log control servlet endpoint -->
     <servlet-mapping>
         <servlet-name>logControl</servlet-name>
         <url-pattern>/logControl</url-pattern>
     </servlet-mapping>
 
+    <!-- Availability servlet endpoint -->
     <servlet-mapping>
         <servlet-name>AvailabilityServlet</servlet-name>
         <url-pattern>/availability</url-pattern>
     </servlet-mapping>
     
+    <!-- Capability servlet endpoint -->
   <servlet-mapping>
     <servlet-name>CapabilitiesServlet</servlet-name>
     <url-pattern>/capabilities</url-pattern>
   </servlet-mapping>
 
-    <!--    Current caom2 version endpoint (2.4) -->
+    <!--  Current caom2 version endpoint (2.4) -->
     <servlet-mapping>
         <servlet-name>RepoServlet</servlet-name>
         <url-pattern>/observations/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>RepoServlet</servlet-name>
-        <url-pattern>/auth-observations/*</url-pattern>
-    </servlet-mapping>
-
-    <!--    caom2 2.3 version endpoint -->
-    <servlet-mapping>
-        <servlet-name>Repo23Servlet</servlet-name>
-        <url-pattern>/observations23/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>Repo23Servlet</servlet-name>
-        <url-pattern>/auth-observations23/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>DeletionsServlet</servlet-name>
         <url-pattern>/deletions/*</url-pattern>
     </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>DeletionsServlet</servlet-name>
-        <url-pattern>/auth-deletions/*</url-pattern>
-    </servlet-mapping>
-    
-    <!-- security constraints -->
-    
-    <security-role>
-        <description>Public security role</description>
-        <role-name>public</role-name>
-    </security-role>
-
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>auth</web-resource-name>
-            <description/>
-            <url-pattern>/auth-observations/*</url-pattern>
-            <url-pattern>/auth-observations23/*</url-pattern>
-            <url-pattern>/auth-deletions/*</url-pattern>
-            <url-pattern>/logControl/*</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-            <http-method>HEAD</http-method>
-            <http-method>PUT</http-method>
-            <http-method>OPTIONS</http-method>
-            <http-method>TRACE</http-method>
-            <http-method>DELETE</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>force authentication for all requests</description>
-            <role-name>public</role-name>
-        </auth-constraint>
-    </security-constraint>
-    
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>Canadian Astronomy Data Centre</realm-name>
-    </login-config>
     
 </web-app>

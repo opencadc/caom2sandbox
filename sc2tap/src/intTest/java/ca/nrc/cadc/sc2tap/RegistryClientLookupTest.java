@@ -131,7 +131,7 @@ public class RegistryClientLookupTest {
     @Test
     public void testAnonAsync() {
         try {
-            URL url = tapClient.getAsyncURL(AuthMethod.ANON);
+            URL url = tapClient.getAsyncURL(Standards.getSecurityMethod(AuthMethod.ANON));
             Assert.assertNotNull(url);
 
             HttpPost post = new HttpPost(url, queryParams, false);
@@ -148,7 +148,7 @@ public class RegistryClientLookupTest {
     @Test
     public void testAnonSync() {
         try {
-            URL url = tapClient.getSyncURL(AuthMethod.ANON);
+            URL url = tapClient.getSyncURL(Standards.getSecurityMethod(AuthMethod.ANON));
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             post.run();
@@ -162,46 +162,10 @@ public class RegistryClientLookupTest {
     }
 
     @Test
-    public void testAnonTables() {
-        try {
-            URL url = regClient.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.VOSI_TABLES_11, AuthMethod.ANON);
-
-            Assert.assertNotNull(url);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            HttpDownload get = new HttpDownload(url, bos);
-            get.run();
-            Assert.assertNull(get.getThrowable());
-            Assert.assertEquals(200, get.getResponseCode());
-            Assert.assertTrue(bos.size() > 0);
-        } catch (Exception unexpected) {
-            log.error("unexpected exception", unexpected);
-            Assert.fail("unexpected exception: " + unexpected);
-        }
-    }
-
-    @Test
-    public void testAuthAsync() {
-        try {
-            URL url = tapClient.getAsyncURL(AuthMethod.ANON);
-            Assert.assertNotNull("anon async to mangle", url);
-            url = new URL(url.toExternalForm().replace("async", "auth-async")); // CADC convention
-
-            HttpPost post = new HttpPost(url, queryParams, false);
-            post.run();
-            Assert.assertNotNull(post.getThrowable());
-            Assert.assertEquals(401, post.getResponseCode());
-        } catch (Exception unexpected) {
-            log.error("unexpected exception", unexpected);
-            Assert.fail("unexpected exception: " + unexpected);
-        }
-    }
-
-    @Test
     public void testAuthSync() {
         try {
-            URL url = tapClient.getSyncURL(AuthMethod.ANON);
+            URL url = tapClient.getSyncURL(Standards.getSecurityMethod(AuthMethod.ANON));
             Assert.assertNotNull("anon sync to mangle", url);
-            url = new URL(url.toExternalForm().replace("sync", "auth-sync")); // CADC convention
 
             HttpPost post = new HttpPost(url, queryParams, false);
             post.run();
@@ -216,7 +180,7 @@ public class RegistryClientLookupTest {
     @Test
     public void testX509Async() {
         try {
-            URL url = tapClient.getAsyncURL(AuthMethod.CERT);
+            URL url = tapClient.getAsyncURL(Standards.getSecurityMethod(AuthMethod.CERT));
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             Subject.doAs(subject, new RunnableAction(post));
@@ -227,6 +191,7 @@ public class RegistryClientLookupTest {
 
             URL jobURL = post.getRedirectURL();
             Job j = Subject.doAs(subject, new GetJobAction(jobURL));
+            log.error("Job: " + j);
             Assert.assertNotNull(j);
             Assert.assertNotNull(j.getOwnerID());
             // assume X500 DN output
@@ -244,7 +209,7 @@ public class RegistryClientLookupTest {
     @Test
     public void testX509Sync() {
         try {
-            URL url = tapClient.getSyncURL(AuthMethod.CERT);
+            URL url = tapClient.getSyncURL(Standards.getSecurityMethod(AuthMethod.CERT));
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             Subject.doAs(subject, new RunnableAction(post));

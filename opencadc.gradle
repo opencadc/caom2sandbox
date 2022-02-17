@@ -45,6 +45,8 @@ tasks.withType(Checkstyle).each { checkstyleTask ->
 }
 
 tasks.withType(Test) {
+    maxHeapSize="1024m"
+
     // reset the report destinations so that intTests go to their own page
     //reports.html.destination = file("${reporting.baseDir}/${name}")
     reports.html.destination = file(reporting.baseDir.getAbsolutePath() + '/' + name)

@@ -69,9 +69,6 @@
 
 package ca.nrc.cadc.sc2tap;
 
-import ca.nrc.cadc.auth.RunnableAction;
-import ca.nrc.cadc.auth.SSLUtil;
-import ca.nrc.cadc.net.HttpUpload;
 import ca.nrc.cadc.tap.integration.TapAsyncUploadTest;
 import ca.nrc.cadc.util.FileUtil;
 import ca.nrc.cadc.util.Log4jInit;
@@ -79,7 +76,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import javax.security.auth.Subject;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -95,7 +91,6 @@ public class CaomTapAsyncUploadTest extends TapAsyncUploadTest
     {
         Log4jInit.setLevel("ca.nrc.cadc.tap.impl", Level.INFO);
         Log4jInit.setLevel("ca.nrc.cadc.conformance.uws2", Level.INFO);
-        //Log4jInit.setLevel("ca.nrc.cadc.net", Level.DEBUG);
     }
 
     public CaomTapAsyncUploadTest()
@@ -110,7 +105,7 @@ public class CaomTapAsyncUploadTest extends TapAsyncUploadTest
     {
         try
         {
-            return new URL("http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/data/pub/TEST/public-tap-int-test-ObsCore.xml");
+            return new URL("https://ws.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/data/pub/TEST/public-tap-int-test-ObsCore.xml");
         }
         catch(MalformedURLException ex)
         {

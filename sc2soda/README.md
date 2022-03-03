@@ -26,19 +26,8 @@ The `uws` pool manages (create, alter, drop) uws tables and manages the uws cont
 (creates and modifies jobs in the uws schema when jobs are created and executed by users.
 
 ### LocalAuthority.properties
-The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions. The keys
-are standardID values for the functions and the values are resourceID values for the service that implements that standard
-feature.
-
-Example:
-```
-ivo://ivoa.net/std/GMS#search-0.1 = ivo://cadc.nrc.ca/gms           
-ivo://ivoa.net/std/UMS#users-0.1 = ivo://cadc.nrc.ca/gms    
-ivo://ivoa.net/std/UMS#login-0.1 = ivo://cadc.nrc.ca/gms           
-
-ivo://ivoa.net/std/CDP#delegate-1.0 = ivo://cadc.nrc.ca/cred
-ivo://ivoa.net/std/CDP#proxy-1.0 = ivo://cadc.nrc.ca/cred
-```
+The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions.
+Documentation for the LocalAuthority.properties file can be found at [cadc-registry](https://github.com/opencadc/reg/tree/master/cadc-registry)
 
 ## building it
 ```

@@ -48,22 +48,13 @@ In addition, the TAP service does not currently support a configurable schema na
 named `caom2` holds the content.
 
 ### LocalAuthority.properties
-The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions. The keys are standardID values for the functions and the values are resourceID values for the service that implements that standard feature.
-
-Example:
-```
-ivo://ivoa.net/std/GMS#search-0.1 = ivo://cadc.nrc.ca/gms           
-ivo://ivoa.net/std/UMS#users-0.1 = ivo://cadc.nrc.ca/gms    
-ivo://ivoa.net/std/UMS#login-0.1 = ivo://cadc.nrc.ca/gms           
-
-ivo://ivoa.net/std/CDP#delegate-1.0 = ivo://cadc.nrc.ca/cred
-ivo://ivoa.net/std/CDP#proxy-1.0 = ivo://cadc.nrc.ca/cred
-```
+The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions.
+Documentation for the LocalAuthority.properties file can be found at [cadc-registry](https://github.com/opencadc/reg/tree/master/cadc-registry)
 
 ### database tables
-sc2tap requires a PostgreSQL database with citext and pg_sphere extensions, and the `caom2` schema and tables, and the `tap_schema`, `tap_upload`, and `uws` schemas and tables. Hitting the /availability will create the required caom2 table structure if it doesn't already exist.
-
-The `tap_schema`, `tap_upload`, and `uws` schemas and tables can be created using psql commands. The schemas must be created first. The tables are created using psql: the PostgreSQL client.
+sc2tap requires a PostgreSQL database with citext and pg_sphere extensions, the `caom2`, `tap_schema`, `tap_upload`, and `uws` schemas and tables.
+The schemas must be created first. The `caom2` tables are created by calling the /sc2repo/availability endpoint.
+The `tap_schema`, `tap_upload`, and `uws` tables can be created using psql commands.  The tables are created using psql: the PostgreSQL client.
 
 The psql command to create a database table from a table definition is:
 `psql -d <database> -h <host> -U <username> -W <prompt for password> -p <port> -f <filename>`

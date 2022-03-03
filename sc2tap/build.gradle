@@ -34,7 +34,7 @@ dependencies {
     compile 'org.opencadc:cadc-tap-server:[1.1.6,)'
     compile 'org.opencadc:cadc-tap-server-pg:[1.0.1,)'
     compile 'org.opencadc:cadc-tap-schema:[1.1.1,)'
-    compile 'org.opencadc:caom2-tap-server:[1.1.15,)'
+    compile 'org.opencadc:caom2-tap-server:[1.2.4,)'
     compile 'org.opencadc:cadc-rest:[1.2.8,)'
     
     runtime 'org.opencadc:cadc-log:[1.0,)'

@@ -32,7 +32,7 @@ Documentation for the LocalAuthority.properties file can be found at [cadc-regis
 ## building it
 ```
 gradle clean build
-docker build -t sc2meta -f Dockerfile .
+docker build -t sc2links -f Dockerfile .
 ```
 
 ## checking it

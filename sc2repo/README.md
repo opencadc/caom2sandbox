@@ -33,18 +33,11 @@ The `admin` account owns and manages (create, alter, drop) sandbox database obje
 In addition, the TAP service does not currently support a configurable schema name: it assumes a schema 
 named `caom2` holds the content.
 
+
 ### LocalAuthority.properties
-The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions. The keys are standardID values for the functions and the values are resourceID values for the service that implements that standard feature.
+The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions. 
+Documentation for the LocalAuthority.properties file can be found at [cadc-registry](https://github.com/opencadc/reg/tree/master/cadc-registry)
 
-Example:
-```
-ivo://ivoa.net/std/GMS#search-0.1 = ivo://cadc.nrc.ca/gms           
-ivo://ivoa.net/std/UMS#users-0.1 = ivo://cadc.nrc.ca/gms    
-ivo://ivoa.net/std/UMS#login-0.1 = ivo://cadc.nrc.ca/gms           
-
-ivo://ivoa.net/std/CDP#delegate-1.0 = ivo://cadc.nrc.ca/cred
-ivo://ivoa.net/std/CDP#proxy-1.0 = ivo://cadc.nrc.ca/cred
-```
 
 ### sc2repo.properties
 The sc2repo.properties configures a collection with the desired proposal group, operator group and staff group.
@@ -61,34 +54,8 @@ Documentation for the sc2repo.properties (CaomRepoConfig.properties) can be foun
 
 
 ### database tables
-sc2repo requires a PostgreSQL database with citext and pg_sphere extensions, and the `caom2` schema and tables. The `caom2` schema must first be created. The `caom2` tables are created using psql: the PostgreSQL client. 
+sc2repo requires a PostgreSQL database with citext and pg_sphere extensions with a `caom2` schema. The `caom2` tables are created by calling the /sc2repo/availability endpoint, which checks/creates/upgrades the caom2 database content.
 
-The psql command to create a database table from a table definition is:
-`psql -d <database> -h <host> -U <username> -W <prompt for password> -p <port> -f <filename>`
-
-The `caom2` table definitions are in
-[caom2 table definitions](https://github.com/opencadc/caom2db/tree/master/caom2persistence/src/main/resources/postgresql).
-
-The placeholder `<schema>` in the table definitions can be replaced with a schema name using `sed`. To replace `<schema>` with `caom2` use `sed -i 's/<schema>/caom2/g' caom2.*.sql`
-
-The caom2 tables are created in the following order:
-```
-caom2.ModelVersion.sql
-caom2.Observation.sql
-caom2.Plane.sql
-caom2.Artifact.sql
-caom2.Part.sql
-caom2.Chunk.sql
-caom2.HarvestState.sql
-caom2.HarvestSkip.sql
-caom2.HarvestSkipURI.sql
-caom2.deleted.sql
-caom2.extra_indices.sql
-caom2.ObsCore.sql
-caom2.ObsCore-x.sql
-caom2.SIAv1.sql
-caom2.permissions.sql
-```
 
 ## building it
 ```

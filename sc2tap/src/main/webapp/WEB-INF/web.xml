@@ -24,6 +24,7 @@
         ca.nrc.cadc.net
         ca.nrc.cadc.auth
         ca.nrc.cadc.vosi
+        ca.nrc.cadc.db
       </param-value>
     </init-param>
     <init-param>
@@ -91,6 +92,10 @@
     <servlet-name>TempStorageServlet</servlet-name>
     <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
     <init-param>
+        <param-name>init</param-name>
+        <param-value>ca.nrc.cadc.sc2tap.TempStorageInitAction</param-value>
+    </init-param>
+    <init-param>
       <param-name>get</param-name>
       <param-value>ca.nrc.cadc.sc2tap.TempStorageGetAction</param-value>
     </init-param>
@@ -122,6 +127,10 @@
   <servlet>
         <servlet-name>TableServlet</servlet-name>
         <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
+        <init-param>
+            <param-name>init</param-name>
+            <param-value>ca.nrc.cadc.sc2tap.InitDatabaseAction</param-value>
+        </init-param>
         <init-param>
             <param-name>get</param-name>
             <param-value>ca.nrc.cadc.vosi.actions.GetAction</param-value>

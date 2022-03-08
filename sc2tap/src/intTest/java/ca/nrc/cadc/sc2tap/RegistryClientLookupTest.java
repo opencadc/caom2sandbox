@@ -162,22 +162,6 @@ public class RegistryClientLookupTest {
     }
 
     @Test
-    public void testAuthSync() {
-        try {
-            URL url = tapClient.getSyncURL(Standards.getSecurityMethod(AuthMethod.ANON));
-            Assert.assertNotNull("anon sync to mangle", url);
-
-            HttpPost post = new HttpPost(url, queryParams, false);
-            post.run();
-            Assert.assertNotNull(post.getThrowable());
-            Assert.assertEquals(401, post.getResponseCode());
-        } catch (Exception unexpected) {
-            log.error("unexpected exception", unexpected);
-            Assert.fail("unexpected exception: " + unexpected);
-        }
-    }
-
-    @Test
     public void testX509Async() {
         try {
             URL url = tapClient.getAsyncURL(Standards.getSecurityMethod(AuthMethod.CERT));

@@ -72,7 +72,6 @@ package ca.nrc.cadc.sc2tap;
 import ca.nrc.cadc.dali.tables.TableWriter;
 import ca.nrc.cadc.tap.ResultStore;
 import ca.nrc.cadc.util.MultiValuedProperties;
-import ca.nrc.cadc.util.PropertiesReader;
 import ca.nrc.cadc.uws.Job;
 import ca.nrc.cadc.uws.server.RandomStringGenerator;
 import ca.nrc.cadc.uws.web.InlineContentException;
@@ -95,47 +94,17 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
 
     private static final Logger log = Logger.getLogger(TempStorageManager.class);
 
-    private static final String CONFIG = "sc2tap.properties";
-
-    private static final String CONFIG_KEY = "org.opencadc.sc2tap";
-    private static final String BASE_DIR_KEY = CONFIG_KEY + ".baseStorageDir";
-    private static final String BASE_URL_KEY = CONFIG_KEY + ".baseURL";
-
     private Job job;
     private String contentType;
     private String filename;
 
-    private File baseDir;
-    private String baseURL;
+    private final File baseDir;
+    private final String baseURL;
 
     public TempStorageManager() {
-        PropertiesReader r = new PropertiesReader(CONFIG);
-        MultiValuedProperties props = r.getAllProperties();
-
-        for (String s : props.keySet()) {
-            log.debug("props: " + s + "=" + props.getProperty(s));
-        }
-
-        this.baseURL = props.getFirstPropertyValue(BASE_URL_KEY) + "/files";
-        this.baseDir = new File(props.getFirstPropertyValue(BASE_DIR_KEY));
-
-        if (!baseDir.exists()) {
-            baseDir.mkdirs();
-        }
-        if (!baseDir.exists()) {
-            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " does not exist, cannot create");
-        }
-        if (!baseDir.isDirectory()) {
-            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " is not a directory");
-        }
-        if (!baseDir.canRead() || !baseDir.canWrite()) {
-            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " is not readable && writable");
-        }
-
-        if (baseDir == null || baseURL == null) {
-            log.error("CONFIG: incomplete: baseDir=" + baseDir + "  baseURL=" + baseURL);
-            throw new RuntimeException("CONFIG incomplete: baseDir=" + baseDir + " baseURL=" + baseURL);
-        }
+        MultiValuedProperties props = TempStorageInitAction.getConfig();
+        this.baseURL = props.getFirstPropertyValue(TempStorageInitAction.BASE_URL_KEY) + "/files";
+        this.baseDir = new File(props.getFirstPropertyValue(TempStorageInitAction.BASE_DIR_KEY));
     }
 
     // used by TempStorageGetAction
@@ -144,11 +113,13 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
     }
 
     // cadc-tap-server ResultStore implementation
+    @Override
     public URL put(ResultSet rs, TableWriter<ResultSet> writer)
             throws IOException {
         return put(rs, writer, null);
     }
 
+    @Override
     public URL put(ResultSet rs, TableWriter<ResultSet> writer, Integer maxRows)
             throws IOException {
         Long num = null;
@@ -156,8 +127,8 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
             num = new Long(maxRows);
         }
 
-        // TODO: get requested content-type from job and store it with file
-        // so that TempStorageAction can set content-type header correctly
+        // TODO: store content-type with file so that TempStorageAction
+        // can set content-type header correctly
         File dest = getDestFile(filename);
         URL ret = getURL(filename);
         FileOutputStream ostream = null;
@@ -172,9 +143,10 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
         return ret;
     }
 
+    @Override
     public URL put(Throwable t, TableWriter writer) throws IOException {
-        // TODO: get requested content-type from job and store it with file
-        // so that TempStorageAction can set content-type header correctly
+        // TODO: store content-type with file so that TempStorageAction
+        // can set content-type header correctly
         File dest = getDestFile(filename);
         URL ret = getURL(filename);
         FileOutputStream ostream = null;
@@ -189,14 +161,17 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
         return ret;
     }
 
+    @Override
     public void setJob(Job job) {
         this.job = job;
     }
 
+    @Override
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    @Override
     public void setFilename(String filename) {
         this.filename = filename;
     }
@@ -241,6 +216,8 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler 
         log.debug("put: " + put);
         log.debug("contentType: " + contentType);
 
+        // TODO: store content-type with file so that TempStorageAction
+        // can set content-type header correctly
         FileOutputStream fos = new FileOutputStream(put);
         byte[] buf = new byte[16384];
         int num = inputStream.read(buf);

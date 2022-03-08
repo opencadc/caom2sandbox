@@ -3,7 +3,7 @@
 *******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 **************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 *
-*  (c) 2021.                            (c) 2021.
+*  (c) 2022.                            (c) 2022.
 *  Government of Canada                 Gouvernement du Canada
 *  National Research Council            Conseil national de recherches
 *  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -67,46 +67,66 @@
 
 package ca.nrc.cadc.sc2tap;
 
-import ca.nrc.cadc.db.DBUtil;
 import ca.nrc.cadc.rest.InitAction;
-import ca.nrc.cadc.tap.impl.InitCaomTapSchemaContent;
-import ca.nrc.cadc.tap.schema.InitDatabaseTS;
-import ca.nrc.cadc.uws.server.impl.InitDatabaseUWS;
-import javax.sql.DataSource;
+import ca.nrc.cadc.util.MultiValuedProperties;
+import ca.nrc.cadc.util.PropertiesReader;
+import java.io.File;
 import org.apache.log4j.Logger;
 
 /**
- * Init uws schema, tap_schema schema, and tap_schema content.
- * 
+ *
  * @author pdowler
  */
-public class InitActionImpl extends InitAction {
-    private static final Logger log = Logger.getLogger(InitActionImpl.class);
+public class TempStorageInitAction extends InitAction {
+    private static final Logger log = Logger.getLogger(TempStorageInitAction.class);
 
-    public InitActionImpl() { 
-    }
+    // TODO to move this code to a library: get config file name from init-param 
+    private static final String CONFIG = "sc2tap.properties";
+    // TODO: change base config key if moved to library
+    private static final String CONFIG_KEY = "org.opencadc.sc2tap";
     
+    static final String BASE_DIR_KEY = CONFIG_KEY + ".baseStorageDir";
+    static final String BASE_URL_KEY = CONFIG_KEY + ".baseURL";
+    
+    public TempStorageInitAction() { 
+    }
+
     @Override
     public void doInit() {
-        try {
-            // tap_schema
-            DataSource tapadm = DBUtil.findJNDIDataSource("jdbc/tapadm");
-            InitDatabaseTS tsi = new InitDatabaseTS(tapadm, null, "tap_schema");
-            tsi.doInit();
+        // verify
+        getConfig();
+    }
+    
+    static MultiValuedProperties getConfig() {
+        PropertiesReader r = new PropertiesReader(CONFIG);
+        MultiValuedProperties props = r.getAllProperties();
 
-            // uws schema
-            DataSource uws = DBUtil.findJNDIDataSource("jdbc/uws");
-            InitDatabaseUWS uwsi = new InitDatabaseUWS(uws, null, "uws");
-            uwsi.doInit();
-            
-            // caom2 tap_schema content
-            InitCaomTapSchemaContent lsc = new InitCaomTapSchemaContent(tapadm, null, "tap_schema");
-            lsc.doInit();
-            
-            // TempStorageManager: ctor checks config
-            new TempStorageManager();
-        } catch (Exception ex) {
-            throw new RuntimeException("INIT FAIL: " + ex.getMessage(), ex);
+        for (String s : props.keySet()) {
+            log.debug("props: " + s + "=" + props.getProperty(s));
         }
+
+        // TODO: /files has to match servlet-mapping for this in web.xml
+        final String baseURL = props.getFirstPropertyValue(BASE_URL_KEY) + "/files";
+        final File baseDir = new File(props.getFirstPropertyValue(BASE_DIR_KEY));
+
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+        }
+        if (!baseDir.exists()) {
+            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " does not exist, cannot create");
+        }
+        if (!baseDir.isDirectory()) {
+            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " is not a directory");
+        }
+        if (!baseDir.canRead() || !baseDir.canWrite()) {
+            throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " is not readable && writable");
+        }
+
+        if (baseDir == null || baseURL == null) {
+            log.error("CONFIG: incomplete: baseDir=" + baseDir + "  baseURL=" + baseURL);
+            throw new RuntimeException("CONFIG incomplete: baseDir=" + baseDir + " baseURL=" + baseURL);
+        }
+        
+        return props;
     }
 }

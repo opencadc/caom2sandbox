@@ -32,7 +32,7 @@ dependencies {
     compile 'org.opencadc:caom2-tap:[1.7.0,)'
     compile 'org.opencadc:caom2-meta-server:[1.4.0,)'
     compile 'org.opencadc:cadc-access-control-identity:[1.0,)'
-    compile 'org.opencadc:cadc-vosi:[1.0.1,2.0)'
+    compile 'org.opencadc:cadc-vosi:[1.4.1,2.0)'
  
     testCompile 'junit:junit:[4.0,)'
     

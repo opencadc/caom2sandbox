@@ -13,7 +13,8 @@
         </init-param>
         <init-param>
             <param-name>logLevelPackages</param-name>
-            <param-value>
+	    <param-value>
+		org.opencadc.datalink
                 ca.nrc.cadc.caom2ops
                 ca.nrc.cadc.caom2.datalink
                 ca.nrc.cadc.caom2.util

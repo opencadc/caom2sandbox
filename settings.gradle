@@ -1,2 +1,0 @@
-rootProject.name = 'caom2sandbox'
-include 'sc2repo', 'sc2tap', 'sc2links', 'sc2meta', 'sc2soda'

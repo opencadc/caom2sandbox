@@ -3,7 +3,7 @@
 *******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 **************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 *
-*  (c) 2021.                            (c) 2021.
+*  (c) 2022.                            (c) 2022.
 *  Government of Canada                 Gouvernement du Canada
 *  National Research Council            Conseil national de recherches
 *  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -70,10 +70,11 @@ package ca.nrc.cadc.sc2tap;
 import ca.nrc.cadc.auth.AuthMethod;
 import ca.nrc.cadc.auth.AuthenticatorImpl;
 import ca.nrc.cadc.reg.Standards;
+import ca.nrc.cadc.reg.client.LocalAuthority;
 import ca.nrc.cadc.reg.client.RegistryClient;
 import ca.nrc.cadc.uws.server.RandomStringGenerator;
+import ca.nrc.cadc.vosi.Availability;
 import ca.nrc.cadc.vosi.AvailabilityPlugin;
-import ca.nrc.cadc.vosi.AvailabilityStatus;
 import ca.nrc.cadc.vosi.avail.CheckCertificate;
 import ca.nrc.cadc.vosi.avail.CheckDataSource;
 import ca.nrc.cadc.vosi.avail.CheckException;
@@ -82,6 +83,7 @@ import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import org.apache.log4j.Logger;
 
 /**
@@ -109,7 +111,7 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
     }
     
     @Override
-    public AvailabilityStatus getStatus() {
+    public Availability getStatus() {
         boolean isGood = true;
         String note = "service is accepting queries";
         try {
@@ -134,21 +136,34 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
             cr = new CheckDataSource("jdbc/tapuser", uploadTest[1], false);
             cr.check();
 
-            // certificate need to call cred
+            // certificate for A&A
             File cert = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
             CheckCertificate checkCert = new CheckCertificate(cert);
             checkCert.check();
 
+            // check other services we depend on
             RegistryClient reg = new RegistryClient();
-            String vos = reg.getServiceURL(URI.create("ivo://cadc.nrc.ca/vault"),
-                    Standards.VOSI_AVAILABILITY, AuthMethod.ANON).toExternalForm();
-            CheckWebService cws = new CheckWebService(vos);
-            cws.check();
-            
-            String cred =  reg.getServiceURL(URI.create("ivo://cadc.nrc.ca/cred"),
-                    Standards.VOSI_AVAILABILITY, AuthMethod.ANON).toExternalForm();
-            cws = new CheckWebService(cred);
-            cws.check();
+            URL url;
+            CheckResource checkResource;
+
+            LocalAuthority localAuthority = new LocalAuthority();
+
+            URI credURI = localAuthority.getServiceURI(Standards.CRED_PROXY_10.toString());
+            url = reg.getServiceURL(credURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+            checkResource = new CheckWebService(url);
+            checkResource.check();
+
+            URI usersURI = localAuthority.getServiceURI(Standards.UMS_USERS_01.toString());
+            url = reg.getServiceURL(usersURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+            checkResource = new CheckWebService(url);
+            checkResource.check();
+
+            URI groupsURI = localAuthority.getServiceURI(Standards.GMS_SEARCH_01.toString());
+            if (!groupsURI.equals(usersURI)) {
+                url = reg.getServiceURL(groupsURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+                checkResource = new CheckWebService(url);
+                checkResource.check();
+            }
             
             // try to store a temp file (inline content or async result)
             String fname = "availability-test.out";
@@ -173,7 +188,7 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
             isGood = false;
             note = "test failed, reason: " + t;
         }
-        return new AvailabilityStatus(isGood, null, null, null, note);
+        return new Availability(isGood, note);
     }
 
     private String[] getTapUploadTest() {

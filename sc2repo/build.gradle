@@ -24,10 +24,9 @@ war {
 }
 
 dependencies {
-    compile 'log4j:log4j:[1.2.0,)'
     providedCompile 'javax.servlet:javax.servlet-api:[3.1.0,)'
 
-    compile 'org.opencadc:cadc-util:[1.2.29,)'
+    compile 'org.opencadc:cadc-util:[1.6,2.0)'
     runtime 'org.opencadc:cadc-log:[1.0.1,)'
     compile 'org.opencadc:caom2:[2.4.1,2.5)'
     compile 'org.opencadc:caom2-compute:[2.4.2,2.5)'

@@ -60,7 +60,7 @@
     </init-param>
     <init-param>
       <param-name>ca.nrc.cadc.rest.InlineContentHandler</param-name>
-      <param-value>ca.nrc.cadc.sc2tap.TempStorageManager</param-value>
+      <param-value>org.opencadc.tap.tmp.TempStorageManager</param-value>
     </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
@@ -83,7 +83,7 @@
     </init-param>
     <init-param>
       <param-name>ca.nrc.cadc.rest.InlineContentHandler</param-name>
-      <param-value>ca.nrc.cadc.sc2tap.TempStorageManager</param-value>
+      <param-value>org.opencadc.tap.tmp.TempStorageManager</param-value>
     </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
@@ -93,11 +93,11 @@
     <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
     <init-param>
         <param-name>init</param-name>
-        <param-value>ca.nrc.cadc.sc2tap.TempStorageInitAction</param-value>
+        <param-value>org.opencadc.tap.tmp.TempStorageInitAction</param-value>
     </init-param>
     <init-param>
-      <param-name>get</param-name>
-      <param-value>ca.nrc.cadc.sc2tap.TempStorageGetAction</param-value>
+        <param-name>get</param-name>
+        <param-value>org.opencadc.tap.tmp.TempStorageGetAction</param-value>
     </init-param>
     <load-on-startup>3</load-on-startup>
   </servlet>
@@ -151,7 +151,7 @@
 
   <servlet-mapping>
     <servlet-name>TempStorageServlet</servlet-name>
-    <url-pattern>/files/*</url-pattern>
+    <url-pattern>/results/*</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>

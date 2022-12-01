@@ -48,19 +48,29 @@ All three pools must have the same JDBC URL (e.g. use the same database) with Po
 In addition, the TAP service does not currently support a configurable schema name: it assumes a schema 
 named `caom2` holds the content.
 
-## sc2tap.properties
-```
-org.opencadc.sc2tap.baseStorageDir = {directory for async results}
-org.opencadc.sc2tap.baseURL = {base URL of the sc2tap service}
-```
+### sc2tap.properties
+This config file is no longer used.
 
-These two properties configure the internal TempStorageManager that handles async query results
-and inline tap_upload files. The specified directory may be inside the container or volume mounted, but must be writable by the tomcat uid (see [cadc-tomcat](https://github.com/opencadc/docker-base/tree/master/cadc-tomcat).
+### cadc-tap-tmp.properties
+Temporary storage of uploads and async results are now handled by the 
+[cadc-tap-tmp](https://github.com/opencadc/tap/tree/master/cadc-tap-tmp) library. This
+library should be configured to use local mounted storage:
+```
+org.opencadc.tap.tmp.TempStorageManager.baseURL = https://{server name}/{service path}/results
+org.opencadc.tap.tmp.TempStorageManager.baseStorageDir = {local directory}
+```
+or it can be configured to use an external writable HTTP service:
+```
+org.opencadc.tap.tmp.HttpStorageManager.baseURL = {base URL where files can be PUT}
+org.opencadc.tap.tmp.HttpStorageManager.certificate = {client cert for authenticated PUT}
+```
+The external HTTP service must allow for anonymous GET of files stored because users will be
+given the URL to the result file and will probably try to download it anonymously.
 
 Example:
 ```
 org.opencadc.sc2tap.baseStorageDir = /var/tmp/sc2tap
-org.opencadc.sc2tap.baseURL = https://haproxy.cadc.dao.nrc.ca/sc2tap
+org.opencadc.sc2tap.baseURL = https://example.net/sc2tap/results
 ```
 works because `/var/tmp` exists in the image and is writable by all.
 

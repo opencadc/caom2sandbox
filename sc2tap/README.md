@@ -59,25 +59,25 @@ library should be configured to use local mounted storage:
 org.opencadc.tap.tmp.TempStorageManager.baseURL = https://{server name}/{service path}/results
 org.opencadc.tap.tmp.TempStorageManager.baseStorageDir = {local directory}
 ```
-or it can be configured to use an external writable HTTP service:
-```
-org.opencadc.tap.tmp.HttpStorageManager.baseURL = {base URL where files can be PUT}
-org.opencadc.tap.tmp.HttpStorageManager.certificate = {client cert for authenticated PUT}
-```
-The external HTTP service must allow for anonymous GET of files stored because users will be
-given the URL to the result file and will probably try to download it anonymously.
 
 Example:
 ```
-org.opencadc.sc2tap.baseStorageDir = /var/tmp/sc2tap
-org.opencadc.sc2tap.baseURL = https://example.net/sc2tap/results
+org.opencadc.tap.tmp.TempStorageManager.baseURL = https://example.net/sc2tap/results
+org.opencadc.tap.tmp.TempStorageManager.baseStorageDir = /var/tmp/sc2tap
+
 ```
-works because `/var/tmp` exists in the image and is writable by all.
+works in the simple case because `/var/tmp` exists in the container and is writable by all. If deploying
+multiple instances of `sc2tap` behind a balancer, a shared filesystem used by all containers is needed so
+that a result file written by once instance can be served by another instance.
+
+Note: `sc2tap` is currently hard-coded to use the TempStorageManager implementation because a plugin
+config file used by the cadc-tap-server library has to be inside the war file. Once the library catalina
+find and use the plugin config from the `/config` directory then it will be possible to chose the 
+HttpStorageManager implementation.
 
 ### LocalAuthority.properties
 The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions.
 Documentation for the LocalAuthority.properties file can be found at [cadc-registry](https://github.com/opencadc/reg/tree/master/cadc-registry)
-
 
 ## building it
 ```

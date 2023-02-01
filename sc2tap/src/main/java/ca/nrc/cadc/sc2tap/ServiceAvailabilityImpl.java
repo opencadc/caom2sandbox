@@ -81,7 +81,6 @@ import ca.nrc.cadc.vosi.avail.CheckException;
 import ca.nrc.cadc.vosi.avail.CheckResource;
 import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import org.apache.log4j.Logger;
@@ -91,11 +90,12 @@ import org.apache.log4j.Logger;
  * @author pdowler
  */
 public class ServiceAvailabilityImpl implements AvailabilityPlugin {
-
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
+    
+    private static final File AAI_OPS_PEM = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
 
-    private final String UWSDS_TEST = "select jobID from uws.Job limit 1";
-    private final String TAPDS_TEST = "select schema_name from tap_schema.schemas11 where schema_name='caom2'";
+    private static final String UWSDS_TEST = "select jobID from uws.Job limit 1";
+    private static final String TAPDS_TEST = "select schema_name from tap_schema.schemas11 where schema_name='caom2'";
 
     public ServiceAvailabilityImpl() {
     }
@@ -136,11 +136,6 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
             cr = new CheckDataSource("jdbc/tapuser", uploadTest[1], false);
             cr.check();
 
-            // certificate for A&A
-            File cert = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
-            CheckCertificate checkCert = new CheckCertificate(cert);
-            checkCert.check();
-
             // check other services we depend on
             RegistryClient reg = new RegistryClient();
             URL url;
@@ -165,17 +160,10 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
                 checkResource.check();
             }
             
-            // try to store a temp file (inline content or async result)
-            String fname = "availability-test.out";
-            TempStorageManager tsm = new TempStorageManager();
-            File tmp = tsm.getStoredFile(fname);
-            try {
-                if (tmp.exists()) {
-                    tmp.delete();
-                }
-                tmp.createNewFile();
-            } catch (IOException ex) {
-                throw new CheckException("CONFIG: cannot write temporary file " + tmp.getAbsolutePath(), ex);
+            if (credURI != null || usersURI != null || groupsURI != null) {
+                // check for a certficate needed to perform network A&A ops
+                CheckCertificate checkCert = new CheckCertificate(AAI_OPS_PEM);
+                checkCert.check();
             }
             
         } catch (CheckException ce) {

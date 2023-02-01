@@ -48,26 +48,36 @@ All three pools must have the same JDBC URL (e.g. use the same database) with Po
 In addition, the TAP service does not currently support a configurable schema name: it assumes a schema 
 named `caom2` holds the content.
 
-## sc2tap.properties
-```
-org.opencadc.sc2tap.baseStorageDir = {directory for async results}
-org.opencadc.sc2tap.baseURL = {base URL of the sc2tap service}
-```
+### sc2tap.properties
+This config file is no longer used.
 
-These two properties configure the internal TempStorageManager that handles async query results
-and inline tap_upload files. The specified directory may be inside the container or volume mounted, but must be writable by the tomcat uid (see [cadc-tomcat](https://github.com/opencadc/docker-base/tree/master/cadc-tomcat).
+### cadc-tap-tmp.properties
+Temporary storage of uploads and async results are now handled by the 
+[cadc-tap-tmp](https://github.com/opencadc/tap/tree/master/cadc-tap-tmp) library. This
+library should be configured to use local mounted storage:
+```
+org.opencadc.tap.tmp.TempStorageManager.baseURL = https://{server name}/{service path}/results
+org.opencadc.tap.tmp.TempStorageManager.baseStorageDir = {local directory}
+```
 
 Example:
 ```
-org.opencadc.sc2tap.baseStorageDir = /var/tmp/sc2tap
-org.opencadc.sc2tap.baseURL = https://haproxy.cadc.dao.nrc.ca/sc2tap
+org.opencadc.tap.tmp.TempStorageManager.baseURL = https://example.net/sc2tap/results
+org.opencadc.tap.tmp.TempStorageManager.baseStorageDir = /var/tmp/sc2tap
+
 ```
-works because `/var/tmp` exists in the image and is writable by all.
+works in the simple case because `/var/tmp` exists in the container and is writable by all. If deploying
+multiple instances of `sc2tap` behind a balancer, a shared filesystem used by all containers is needed so
+that a result file written by once instance can be served by another instance.
+
+Note: `sc2tap` is currently hard-coded to use the TempStorageManager implementation because a plugin
+config file used by the cadc-tap-server library has to be inside the war file. Once the library catalina
+find and use the plugin config from the `/config` directory then it will be possible to chose the 
+HttpStorageManager implementation.
 
 ### LocalAuthority.properties
 The LocalAuthority.properties file specifies which local service is authoritative for various site-wide functions.
 Documentation for the LocalAuthority.properties file can be found at [cadc-registry](https://github.com/opencadc/reg/tree/master/cadc-registry)
-
 
 ## building it
 ```

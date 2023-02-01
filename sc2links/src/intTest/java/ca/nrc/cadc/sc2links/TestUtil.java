@@ -125,8 +125,8 @@ public class TestUtil
     public static Integer[] getFieldIndexes(List<VOTableField> fields)
     {
         Assert.assertNotNull("VOTable FIELD: should not be null", fields);
-        Assert.assertEquals("GET VOTable FIELD: should have 9", fields.size(), 9);
-        Integer[] indexes = new Integer[]{null, null, null, null, null, null, null, null, null};
+        Assert.assertTrue("GET VOTable FIELD: should have 12+", fields.size() >= 12);
+        Integer[] indexes = new Integer[]{null, null, null, null, null, null, null, null, null, null, null, null};
         Integer index = 0;
         for (VOTableField field : fields)
         {
@@ -163,9 +163,21 @@ public class TestUtil
             {
                 indexes[7] = index;
             }
-            else if (field.getName().equals("readable"))
+            else if (field.getName().equals("content_qualifier"))
             {
                 indexes[8] = index;
+            }
+            else if (field.getName().equals("link_auth"))
+            {
+                indexes[9] = index;
+            }
+            else if (field.getName().equals("link_authorized"))
+            {
+                indexes[10] = index;
+            }
+            else if (field.getName().equals("readable")) // temporary compat
+            {
+                indexes[11] = index;
             }
             index++;
         }
@@ -177,7 +189,10 @@ public class TestUtil
         Assert.assertNotNull("content_type not found", indexes[5]);
         Assert.assertNotNull("content_length not found", indexes[6]);
         Assert.assertNotNull("error_message not found", indexes[7]);
-        Assert.assertNotNull("readable not found", indexes[8]);
+        Assert.assertNotNull("content_qualifier not found", indexes[8]);
+        Assert.assertNotNull("link_auth not found", indexes[9]);
+        Assert.assertNotNull("link_authorized not found", indexes[10]);
+        Assert.assertNotNull("readable not found", indexes[11]); // temporary compat
         return indexes;
     }
 

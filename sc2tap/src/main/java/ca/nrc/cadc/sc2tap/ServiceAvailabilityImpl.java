@@ -68,7 +68,6 @@
 package ca.nrc.cadc.sc2tap;
 
 import ca.nrc.cadc.auth.AuthMethod;
-import ca.nrc.cadc.auth.AuthenticatorImpl;
 import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.LocalAuthority;
 import ca.nrc.cadc.reg.client.RegistryClient;
@@ -116,9 +115,6 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
         String note = "service is accepting queries";
         try {
             CheckResource cr;
-
-            cr = AuthenticatorImpl.getAvailabilityCheck();
-            cr.check();
 
             cr = new CheckDataSource("jdbc/uws", UWSDS_TEST);
             cr.check();

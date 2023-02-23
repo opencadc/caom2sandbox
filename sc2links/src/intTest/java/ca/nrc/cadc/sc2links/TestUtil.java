@@ -175,10 +175,6 @@ public class TestUtil
             {
                 indexes[10] = index;
             }
-            else if (field.getName().equals("readable")) // temporary compat
-            {
-                indexes[11] = index;
-            }
             index++;
         }
         Assert.assertNotNull("ID not found", indexes[0]);
@@ -192,7 +188,6 @@ public class TestUtil
         Assert.assertNotNull("content_qualifier not found", indexes[8]);
         Assert.assertNotNull("link_auth not found", indexes[9]);
         Assert.assertNotNull("link_authorized not found", indexes[10]);
-        Assert.assertNotNull("readable not found", indexes[11]); // temporary compat
         return indexes;
     }
 

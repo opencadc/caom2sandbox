@@ -67,7 +67,7 @@
 
 package ca.nrc.cadc.sc2tap;
 
-import ca.nrc.cadc.auth.ACIdentityManager;
+import ca.nrc.cadc.auth.AuthenticationUtil;
 import ca.nrc.cadc.uws.server.JobExecutor;
 import ca.nrc.cadc.uws.server.JobPersistence;
 import ca.nrc.cadc.uws.server.JobUpdater;
@@ -89,7 +89,7 @@ public class QueryJobManager extends SimpleJobManager
     {
         super();
 
-        JobPersistence jobPersist = new PostgresJobPersistence(new ACIdentityManager());
+        JobPersistence jobPersist = new PostgresJobPersistence(AuthenticationUtil.getIdentityManager());
         JobUpdater jobUpdater = (JobUpdater) jobPersist;
 
         // max threads: 6 == number of simultaneously running async queries (per

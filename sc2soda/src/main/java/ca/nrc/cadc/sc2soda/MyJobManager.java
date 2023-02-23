@@ -69,7 +69,7 @@
 
 package ca.nrc.cadc.sc2soda;
 
-import ca.nrc.cadc.auth.ACIdentityManager;
+import ca.nrc.cadc.auth.AuthenticationUtil;
 import ca.nrc.cadc.caom2.soda.SodaJobRunner;
 import ca.nrc.cadc.uws.server.JobExecutor;
 import ca.nrc.cadc.uws.server.SimpleJobManager;
@@ -91,8 +91,7 @@ public class MyJobManager extends SimpleJobManager {
     public MyJobManager() {
         super();
 
-        PostgresJobPersistence jobPersist = new PostgresJobPersistence(new ACIdentityManager());
-
+        PostgresJobPersistence jobPersist = new PostgresJobPersistence(AuthenticationUtil.getIdentityManager());
         JobExecutor jobExec = new ThreadPoolExecutor(jobPersist, SodaJobRunner.class, 3);
 
         super.setJobPersistence(jobPersist);

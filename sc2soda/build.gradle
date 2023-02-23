@@ -27,13 +27,15 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:[3.1.0,)'
     
     compile 'org.opencadc:cadc-util:[1.6,2.0)'
-    compile 'org.opencadc:cadc-log:[1.0,)'
     compile 'org.opencadc:caom2-tap:[1.7.10,)'
     compile 'org.opencadc:caom2-soda-server:[1.6.3,)'
-    compile 'org.opencadc:cadc-access-control-identity:[1.0,)'
     compile 'org.opencadc:cadc-vosi:[1.4.1,2.0)'
     compile 'org.opencadc:cadc-wcs:[2.0,3.0)'
- 
+
+    runtime 'org.opencadc:cadc-log:[1.0,)'
+    runtime 'org.opencadc:cadc-gms:[1.0.4,)'
+    runtime 'org.opencadc:cadc-access-control-identity:[1.2,)'
+
     testCompile 'junit:junit:[4.0,)'
     
     intTestCompile 'org.opencadc:cadc-test-vosi:[1.0.2,)'

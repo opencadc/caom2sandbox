@@ -88,11 +88,12 @@ public class RepoIntTest extends CaomRepoIntTests
         Log4jInit.setLevel("ca.nrc.cadc.sc2repo", Level.INFO);
     }
 
-    public static final URI RESOURCE_ID = URI.create("ivo://cadc.nrc.ca/sc2repo");
+    // use reserved non-production opencadc.org authority
+    public static final URI RESOURCE_ID = URI.create("ivo://opencadc.org/sc2repo");
             
     public RepoIntTest() 
     { 
         // test certificate args: read-write, read-only, no-permissions
-        super(RESOURCE_ID, "x509_CADCAuthtest1.pem", "x509_CADCAuthtest2.pem", "x509_CADCRegtest1.pem");
+        super(RepoIntTest.RESOURCE_ID, "x509_CADCAuthtest1.pem", "x509_CADCAuthtest2.pem", "x509_CADCRegtest1.pem");
     }
 }

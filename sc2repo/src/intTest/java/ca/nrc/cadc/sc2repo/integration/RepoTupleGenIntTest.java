@@ -88,11 +88,9 @@ public class RepoTupleGenIntTest extends CaomRepoTupleTests
         Log4jInit.setLevel("ca.nrc.cadc.sc2repo", Level.INFO);
     }
 
-    public static final URI RESOURCE_ID = URI.create("ivo://cadc.nrc.ca/sc2repo");
-            
     public RepoTupleGenIntTest() 
     { 
         // test certificate args: read-write, read-only, no-permissions
-        super(RESOURCE_ID, "x509_CADCAuthtest1.pem", "x509_CADCAuthtest2.pem", "x509_CADCRegtest1.pem");
+        super(RepoIntTest.RESOURCE_ID, "x509_CADCAuthtest1.pem", "x509_CADCAuthtest2.pem", "x509_CADCRegtest1.pem");
     }
 }

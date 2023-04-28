@@ -19,71 +19,27 @@
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/LOGGING#logControl-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.0">
       <accessURL use="full">https://replace.me.com/sc2repo/logControl</accessURL>     
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
     </interface> 
   </capability>
 
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/CAOM2Repository#obs-1.2">
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">https://replace.me.com/sc2repo/observations</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/auth-observations</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-    <!-- compat -->
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/auth-observations</accessURL>
-      <securityMethod standardID="http://www.w3.org/Protocols/HTTP/1.0/spec.html#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/observations</accessURL>
+      <securityMethod />
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/observations</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#token"/>
     </interface>
   </capability>
 
-  <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/CAOM2Repository#obs-1.1">
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/observations23</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/auth-observations23</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-      <!-- compat -->
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/auth-observations23</accessURL>
-      <securityMethod standardID="http://www.w3.org/Protocols/HTTP/1.0/spec.html#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/observations23</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/observations23</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
-    </interface>
-  </capability>
-  
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/CAOM2Repository#del-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">https://replace.me.com/sc2repo/deletions</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/auth-deletions</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/deletions</accessURL>
+      <securityMethod />
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">https://replace.me.com/sc2repo/deletions</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#token"/>
     </interface>
   </capability>
 </vosi:capabilities>

@@ -86,7 +86,7 @@ public class RepoListTest extends CaomRepoListTests
         Log4jInit.setLevel("ca.nrc.cadc.sc2repo", Level.INFO);
     }
 
-    public static final URI RESOURCE_ID = URI.create("ivo://cadc.nrc.ca/sc2repo");
+    public static final URI RESOURCE_ID = URI.create("ivo://opencadc.org/sc2repo");
             
     public RepoListTest() 
     { 

@@ -28,7 +28,7 @@ dependencies {
 
     compile 'org.opencadc:cadc-util:[1.6,2.0)'
     compile 'org.opencadc:caom2:[2.4.1,2.5)'
-    compile 'org.opencadc:caom2-compute:[2.4.9,2.5)'
+    compile 'org.opencadc:caom2-compute:[2.4.10,2.5)'
     compile 'org.opencadc:caom2persistence:[2.4.14,2.5)'
     compile 'org.opencadc:caom2-repo-server:[2.4.15,2.5)'
     compile 'org.opencadc:cadc-vosi:[1.4.1,2.0)'

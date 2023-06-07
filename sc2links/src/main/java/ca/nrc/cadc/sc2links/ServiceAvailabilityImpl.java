@@ -70,6 +70,7 @@
 package ca.nrc.cadc.sc2links;
 
 import ca.nrc.cadc.auth.AuthMethod;
+import ca.nrc.cadc.net.ResourceNotFoundException;
 import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.LocalAuthority;
 import ca.nrc.cadc.reg.client.RegistryClient;
@@ -83,6 +84,7 @@ import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 
 /**
@@ -134,26 +136,72 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
 
             LocalAuthority localAuthority = new LocalAuthority();
 
-            URI credURI = localAuthority.getServiceURI(Standards.CRED_PROXY_10.toString());
-            url = reg.getServiceURL(credURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
-
-            URI usersURI = localAuthority.getServiceURI(Standards.UMS_USERS_01.toString());
-            url = reg.getServiceURL(usersURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
-
-            URI groupsURI = localAuthority.getServiceURI(Standards.GMS_SEARCH_01.toString());
-            if (!groupsURI.equals(usersURI)) {
-                url = reg.getServiceURL(groupsURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-                checkResource = new CheckWebService(url);
-                checkResource.check();
+            try {
+                URI credURI = localAuthority.getServiceURI(Standards.CRED_PROXY_10.toASCIIString());
+                if (credURI != null) {
+                    url = reg.getServiceURL(credURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+                    if (url != null) {
+                        checkResource = new CheckWebService(url);
+                        checkResource.check();
+                    } else {
+                        throw new ResourceNotFoundException("registry lookup - not found: " + credURI);
+                    }
+                } else {
+                    log.debug("not configured: " + Standards.CRED_PROXY_10.toASCIIString());
+                }
+            } catch (NoSuchElementException ex) { // old LocalAuthority behaviour, subject to change
+                log.debug("not configured: " + Standards.CRED_PROXY_10.toASCIIString());
             }
 
-            url = reg.getServiceURL(TAP_URI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
+            URI groupsURI = null;
+            try {
+                groupsURI = localAuthority.getServiceURI(Standards.GMS_SEARCH_10.toString());
+                if (groupsURI != null) {
+                    url = reg.getServiceURL(groupsURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+                    if (url != null) {
+                        checkResource = new CheckWebService(url);
+                        checkResource.check();
+                    } else {
+                        throw new ResourceNotFoundException("registry lookup - not found: " + groupsURI);
+                    }
+                }  else {
+                    log.debug("not configured: " + Standards.GMS_SEARCH_10.toASCIIString());
+                }
+            } catch (NoSuchElementException ex) { // old LocalAuthority behaviour, subject to change
+                log.debug("not found: " + Standards.GMS_SEARCH_10.toASCIIString());
+            }
+            
+            URI usersURI = null;
+            try {
+                usersURI = localAuthority.getServiceURI(Standards.UMS_USERS_01.toASCIIString());
+                if (usersURI != null) {
+                    if (groupsURI == null || !usersURI.equals(groupsURI)) {
+                        url = reg.getServiceURL(usersURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+                        if (url != null) {
+                            checkResource = new CheckWebService(url);
+                            checkResource.check();
+                        } else {
+                            throw new ResourceNotFoundException("registry lookup - not found: " + usersURI);
+                        }
+                    } else {
+                        log.debug("skipped check because group and user servuices are both " + usersURI);
+                    }
+                }
+            }  catch (NoSuchElementException ex) { // old LocalAuthority behaviour, subject to change
+                log.debug("not found: " + Standards.UMS_USERS_01.toASCIIString());
+            }
+
+            try {
+                url = reg.getServiceURL(TAP_URI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
+                if (url != null) {
+                    checkResource = new CheckWebService(url);
+                    checkResource.check();
+                } else {
+                    throw new ResourceNotFoundException("registry lookup - not found: " + TAP_URI.toASCIIString());
+                }
+            } catch (NoSuchElementException ex) { // old LocalAuthority behaviour, subject to change
+                log.debug("not found: " + TAP_URI.toASCIIString());
+            }
 
         } catch (CheckException ce) {
             // tests determined that the resource is not working

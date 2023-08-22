@@ -1,6 +1,13 @@
 # sc2repo
 
-CAOM repository service for the CADC data engineering sandbox. 
+CAOM repository service for the CADC data engineering sandbox.
+
+## This code is OBSOLETE
+The supported replacement is [torkeep](https://github.com/opencadc/caom2db/tree/master/torkeep)
+
+A docker image available: `images.opencadc.org/caom2/torkeep` (use harbor API to check for version tags)
+
+---
 
 ## configuration
 See the [cadc-tomcat](https://github.com/opencadc/docker-base/tree/master/cadc-tomcat) image

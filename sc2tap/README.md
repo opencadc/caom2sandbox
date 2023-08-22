@@ -2,6 +2,13 @@
 
 CAOM TAP service for the Multiple Archive Query (MAQ) 
 
+## This code is OBSOLETE
+The supported replacement is [argus](https://github.com/opencadc/caom2service/tree/master/argus)
+
+A docker image available: `images.opencadc.org/caom2/argus` (use harbor API to check for version tags)
+
+---
+
 This service allows queries to CAOM metadata using
 IVOA <a href="http://www.ivoa.net/documents/TAP/20190927/">TAP-1.1</a> web service API.
 

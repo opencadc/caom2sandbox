@@ -2,6 +2,13 @@
 
 CAOM DataLink service for the Multiple Archive Query
 
+## This code is OBSOLETE
+The supported replacement is [bifrost](https://github.com/opencadc/caom2service/tree/master/bifrost)
+
+A docker image available: `images.opencadc.org/caom2/bifrost` (use harbor API to check for version tags)
+
+---
+
 ## configuration
 See the [cadc-tomcat](https://github.com/opencadc/docker-base/tree/master/cadc-tomcat) image
 docs for expected deployment and common config requirements. The `sc2links` war file can be renamed

@@ -16,15 +16,6 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: build sc2repo
-      run: cd sc2repo && ../gradlew clean build
-
-    - name: build sc2tap
-      run: cd sc2tap && ../gradlew clean build
-
-    - name: build sc2links
-      run: cd sc2links && ../gradlew clean build
-
     - name: build sc2meta
       run: cd sc2meta && ../gradlew clean build
 

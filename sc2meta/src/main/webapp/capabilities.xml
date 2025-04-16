@@ -18,26 +18,19 @@
   
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/LOGGING#logControl-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.0">
-      <accessURL use="full">https://example.net/sc2meta/logControl</accessURL>     
+      <accessURL use="full">https://example.net/sc2meta/logControl</accessURL>
+      <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>  
     </interface> 
   </capability> 
 
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/CAOM2#obs-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">https://example.net/sc2meta/meta</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2meta/auth-meta</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2meta/meta</accessURL>
+      <securityMethod />
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2meta/meta</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
-    </interface>
+      <securityMethod standardID="ivo://ivoa.net/sso#token"/>
+    </interface> 
   </capability>
   
 </vosi:capabilities>

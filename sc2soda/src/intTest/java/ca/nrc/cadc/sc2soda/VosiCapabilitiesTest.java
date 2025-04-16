@@ -117,11 +117,9 @@ public class VosiCapabilitiesTest extends CapabilitiesTest {
         Assert.assertNotNull("anon sync", sync.findInterface(Standards.SECURITY_METHOD_ANON));
         Assert.assertNotNull("x509 sync", sync.findInterface(Standards.SECURITY_METHOD_CERT));
         Assert.assertNotNull("cookie sync", sync.findInterface(Standards.SECURITY_METHOD_COOKIE));
-        Assert.assertNotNull("password sync", sync.findInterface(Standards.SECURITY_METHOD_HTTP_BASIC));
 
         Assert.assertNotNull("anon async", async.findInterface(Standards.SECURITY_METHOD_ANON));
         Assert.assertNotNull("x509 async", async.findInterface(Standards.SECURITY_METHOD_CERT));
         Assert.assertNotNull("cookie async", async.findInterface(Standards.SECURITY_METHOD_COOKIE));
-        Assert.assertNotNull("password async", async.findInterface(Standards.SECURITY_METHOD_HTTP_BASIC));
     }
 }

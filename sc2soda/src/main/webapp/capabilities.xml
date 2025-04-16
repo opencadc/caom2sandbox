@@ -19,7 +19,7 @@
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/LOGGING#logControl-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.0">
       <accessURL use="full">http://example.net/sc2soda/logControl</accessURL>     
-      <securityMethod standardID="http://ivoa.net/sso#BasicAA"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
     </interface> 
   </capability> 
 
@@ -27,18 +27,10 @@
   <capability standardID="ivo://ivoa.net/std/SODA#sync-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">https://example.net/sc2soda/sync</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/auth-sync</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/sync</accessURL>
+      <securityMethod />
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/sync</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#token"/>
     </interface>
   </capability>
 
@@ -46,18 +38,10 @@
   <capability standardID="ivo://ivoa.net/std/SODA#async-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">https://example.net/sc2soda/async</accessURL>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/auth-async</accessURL>
-      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/async</accessURL>
+      <securityMethod />
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
-    </interface>
-    <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://example.net/sc2soda/async</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#token"/>
     </interface>
   </capability>
   

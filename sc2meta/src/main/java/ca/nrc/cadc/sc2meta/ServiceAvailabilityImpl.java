@@ -78,6 +78,7 @@ import ca.nrc.cadc.vosi.Availability;
 import ca.nrc.cadc.vosi.avail.CheckCertificate;
 import ca.nrc.cadc.vosi.avail.CheckDataSource;
 import ca.nrc.cadc.vosi.avail.CheckException;
+import ca.nrc.cadc.vosi.avail.CheckOpenIDProvider;
 import ca.nrc.cadc.vosi.avail.CheckResource;
 import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
@@ -94,6 +95,7 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin
 {
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
 
+    private static final File AAI_PEM_FILE = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
     private static final URI TAP_URI = URI.create("ivo://cadc.nrc.ca/sc2tap");
 
     private String UWSDS_TEST = "select jobID from uws.Job limit 1";
@@ -120,42 +122,46 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin
             CheckResource cr = new CheckDataSource("jdbc/uws", UWSDS_TEST);
             cr.check();
 
-            // TODO: this should be in a library somewhere
-            //cr = new CheckWcsLib();
-            //cr.check();
-            
-            // certificate for A&A
-            File cert = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
-            CheckCertificate checkCert = new CheckCertificate(cert);
-            checkCert.check();
-
             // check other services we depend on
             RegistryClient reg = new RegistryClient();
-            URL url;
-            CheckResource checkResource;
-
             LocalAuthority localAuthority = new LocalAuthority();
+            
+            URI openidURI = localAuthority.getResourceID(Standards.SECURITY_METHOD_OPENID);
+            if (openidURI != null) {
+                CheckOpenIDProvider ch = new CheckOpenIDProvider(openidURI);
+                ch.check();
+            }
 
-            URI credURI = localAuthority.getServiceURI(Standards.CRED_PROXY_10.toString());
-            url = reg.getServiceURL(credURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
+            URI credURI = localAuthority.getResourceID(Standards.CRED_PROXY_10);
+            if (credURI != null) {
+                CheckResource cws = new CheckWebService(credURI);
+                cws.check();
+            }
 
-            URI usersURI = localAuthority.getServiceURI(Standards.UMS_USERS_01.toString());
-            url = reg.getServiceURL(usersURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
+            URI usersURI = localAuthority.getResourceID(Standards.UMS_USERS_01);
+            if (usersURI != null) {
+                CheckResource cws = new CheckWebService(usersURI);
+                cws.check();
+            }
 
-            URI groupsURI = localAuthority.getServiceURI(Standards.GMS_SEARCH_01.toString());
-            if (!groupsURI.equals(usersURI)) {
-                url = reg.getServiceURL(groupsURI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-                checkResource = new CheckWebService(url);
-                checkResource.check();
+            URI groupsURI = localAuthority.getResourceID(Standards.GMS_SEARCH_10);
+            if (groupsURI != null && !groupsURI.equals(usersURI)) {
+                CheckResource cws = new CheckWebService(groupsURI);
+                cws.check();
             }
             
-            url = reg.getServiceURL(TAP_URI, Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
-            checkResource = new CheckWebService(url);
-            checkResource.check();
+            if (credURI != null || usersURI != null) {
+                if (AAI_PEM_FILE.exists() && AAI_PEM_FILE.canRead()) {
+                    // check for a certificate needed to perform network A&A ops
+                    CheckCertificate checkCert = new CheckCertificate(AAI_PEM_FILE);
+                    checkCert.check();
+                } else {
+                    log.debug("AAI cert not found or unreadable");
+                }
+            }
+            
+            CheckResource ct = new CheckWebService(TAP_URI);
+            ct.check();
             
         }
         catch(CheckException ce)
